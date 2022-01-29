@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="filmDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="film">
+          <Key>
+            <PropertyRef Name="filmID" />
+          </Key>
+          <Property Name="filmID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="yonetmen" Type="nchar" MaxLength="100" />
+          <Property Name="tur" Type="nchar" MaxLength="50" />
+          <Property Name="filmadi" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="kiralik">
+          <Key>
+            <PropertyRef Name="kiralikID" />
+          </Key>
+          <Property Name="kiralikID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="musteriID" Type="int" Nullable="false" />
+          <Property Name="filmID" Type="int" Nullable="false" />
+          <Property Name="kiraTarihi" Type="datetime" Nullable="false" />
+          <Property Name="filmadi" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="musteri">
+          <Key>
+            <PropertyRef Name="musteriID" />
+          </Key>
+          <Property Name="musteriID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="isim" Type="nchar" MaxLength="50" />
+          <Property Name="soyisim" Type="nchar" MaxLength="50" />
+          <Property Name="telefon" Type="nchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK_kiralik_film">
+          <End Role="film" Type="Self.film" Multiplicity="1" />
+          <End Role="kiralik" Type="Self.kiralik" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="film">
+              <PropertyRef Name="filmID" />
+            </Principal>
+            <Dependent Role="kiralik">
+              <PropertyRef Name="filmID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_kiralik_musteri">
+          <End Role="musteri" Type="Self.musteri" Multiplicity="1" />
+          <End Role="kiralik" Type="Self.kiralik" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="musteri">
+              <PropertyRef Name="musteriID" />
+            </Principal>
+            <Dependent Role="kiralik">
+              <PropertyRef Name="musteriID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="filmDBModelStoreContainer">
+          <EntitySet Name="film" EntityType="Self.film" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="kiralik" EntityType="Self.kiralik" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="musteri" EntityType="Self.musteri" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_kiralik_film" Association="Self.FK_kiralik_film">
+            <End Role="film" EntitySet="film" />
+            <End Role="kiralik" EntitySet="kiralik" />
+          </AssociationSet>
+          <AssociationSet Name="FK_kiralik_musteri" Association="Self.FK_kiralik_musteri">
+            <End Role="musteri" EntitySet="musteri" />
+            <End Role="kiralik" EntitySet="kiralik" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="filmDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="film">
+          <Key>
+            <PropertyRef Name="filmID" />
+          </Key>
+          <Property Name="filmID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="yonetmen" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="tur" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="kiraliks" Relationship="filmDBModel.FK_kiralik_film" FromRole="film" ToRole="kiralik" />
+          <Property Name="filmadi" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="kiralik">
+          <Key>
+            <PropertyRef Name="kiralikID" />
+          </Key>
+          <Property Name="kiralikID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="musteriID" Type="Int32" Nullable="false" />
+          <Property Name="filmID" Type="Int32" Nullable="false" />
+          <Property Name="kiraTarihi" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="film" Relationship="filmDBModel.FK_kiralik_film" FromRole="kiralik" ToRole="film" />
+          <NavigationProperty Name="musteri" Relationship="filmDBModel.FK_kiralik_musteri" FromRole="kiralik" ToRole="musteri" />
+          <Property Name="filmadi" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="musteri">
+          <Key>
+            <PropertyRef Name="musteriID" />
+          </Key>
+          <Property Name="musteriID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="isim" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="soyisim" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="telefon" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="kiraliks" Relationship="filmDBModel.FK_kiralik_musteri" FromRole="musteri" ToRole="kiralik" />
+        </EntityType>
+        <EntityContainer Name="filmDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="films" EntityType="Self.film" />
+          <EntitySet Name="kiraliks" EntityType="Self.kiralik" />
+          <EntitySet Name="musteris" EntityType="Self.musteri" />
+          <AssociationSet Name="FK_kiralik_film" Association="filmDBModel.FK_kiralik_film">
+            <End Role="film" EntitySet="films" />
+            <End Role="kiralik" EntitySet="kiraliks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_kiralik_musteri" Association="filmDBModel.FK_kiralik_musteri">
+            <End Role="musteri" EntitySet="musteris" />
+            <End Role="kiralik" EntitySet="kiraliks" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_kiralik_film">
+          <End Type="filmDBModel.film" Role="film" Multiplicity="1" />
+          <End Type="filmDBModel.kiralik" Role="kiralik" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="film">
+              <PropertyRef Name="filmID" />
+            </Principal>
+            <Dependent Role="kiralik">
+              <PropertyRef Name="filmID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_kiralik_musteri">
+          <End Type="filmDBModel.musteri" Role="musteri" Multiplicity="1" />
+          <End Type="filmDBModel.kiralik" Role="kiralik" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="musteri">
+              <PropertyRef Name="musteriID" />
+            </Principal>
+            <Dependent Role="kiralik">
+              <PropertyRef Name="musteriID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="filmDBModelStoreContainer" CdmEntityContainer="filmDBEntities">
+          <EntitySetMapping Name="films">
+            <EntityTypeMapping TypeName="filmDBModel.film">
+              <MappingFragment StoreEntitySet="film">
+                <ScalarProperty Name="filmadi" ColumnName="filmadi" />
+                <ScalarProperty Name="filmID" ColumnName="filmID" />
+                <ScalarProperty Name="yonetmen" ColumnName="yonetmen" />
+                <ScalarProperty Name="tur" ColumnName="tur" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="kiraliks">
+            <EntityTypeMapping TypeName="filmDBModel.kiralik">
+              <MappingFragment StoreEntitySet="kiralik">
+                <ScalarProperty Name="filmadi" ColumnName="filmadi" />
+                <ScalarProperty Name="kiralikID" ColumnName="kiralikID" />
+                <ScalarProperty Name="musteriID" ColumnName="musteriID" />
+                <ScalarProperty Name="filmID" ColumnName="filmID" />
+                <ScalarProperty Name="kiraTarihi" ColumnName="kiraTarihi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="musteris">
+            <EntityTypeMapping TypeName="filmDBModel.musteri">
+              <MappingFragment StoreEntitySet="musteri">
+                <ScalarProperty Name="musteriID" ColumnName="musteriID" />
+                <ScalarProperty Name="isim" ColumnName="isim" />
+                <ScalarProperty Name="soyisim" ColumnName="soyisim" />
+                <ScalarProperty Name="telefon" ColumnName="telefon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
